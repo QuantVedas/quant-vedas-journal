@@ -21,11 +21,8 @@ import {
   getFirestore,
   doc,
   setDoc,
-  getDoc,
   onSnapshot,
   collection,
-  query,
-  where,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -41,7 +38,6 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  Legend,
 } from "recharts";
 
 import { TradeType } from "./types/trade";
@@ -383,76 +379,76 @@ const AuthPage: React.FC<{ onAuthSuccess: () => void }> = ({
 };
 
 // --- Navbar Component ---
-interface NavbarProps {
-  onNavigate: (page: string) => void;
-  onSignOut: () => void;
-  currentUser: any; // Added currentUser to NavbarProps
-}
+// interface NavbarProps {
+//   onNavigate: (page: string) => void;
+//   onSignOut: () => void;
+//   currentUser: any; // Added currentUser to NavbarProps
+// }
 
-const Navbar: React.FC<NavbarProps> = ({
-  onNavigate,
-  onSignOut,
-  currentUser,
-}) => {
-  return (
-    <nav className="bg-gray-800 p-4 text-white shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center">
-          {/* Quant Vedas Logo */}
-          <img
-            src="logo.jpg"
-            alt="Quant Vedas Logo"
-            className="h-10 w-10 mr-2 rounded-full"
-            onError={(e) =>
-              (e.currentTarget.src =
-                "https://placehold.co/40x40/FF0000/FFFFFF?text=Error")
-            }
-          />
-          <span className="text-2xl font-bold mr-2">Quant Vedas</span>
-          <span className="text-xl font-semibold text-blue-400">Journal</span>
-        </div>
-        <div className="flex space-x-4 items-center">
-          {" "}
-          {/* Added items-center for alignment */}
-          <button
-            onClick={() => onNavigate("dashboard")}
-            className="hover:text-blue-300 transition duration-200"
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => onNavigate("profile")}
-            className="hover:text-blue-300 transition duration-200"
-          >
-            Profile
-          </button>
-          {/* Profile Photo/Icon for navigation */}
-          {currentUser && (
-            <button onClick={() => onNavigate("profile")} className="ml-4">
-              <img
-                src={
-                  currentUser.photoURL ||
-                  `https://api.dicebear.com/7.x/initials/svg?seed=${
-                    currentUser.displayName || currentUser.email || "User"
-                  }`
-                }
-                alt="Profile"
-                className="h-10 w-10 rounded-full border-2 border-blue-400 object-cover cursor-pointer hover:border-blue-300 transition duration-200"
-                title="Go to Profile"
-              />
-            </button>
-          )}
-          <button
-            onClick={onSignOut}
-            className="bg-red-600 px-3 py-1 rounded-md hover:bg-red-700 transition duration-200"
-          >
-            Sign Out
-          </button>
-        </div>
-      </div>
-    </nav>
-  );
-};
+// const Navbar: React.FC<NavbarProps> = ({
+//   onNavigate,
+//   onSignOut,
+//   currentUser,
+// }) => {
+//   return (
+//     <nav className="bg-gray-800 p-4 text-white shadow-md">
+//       <div className="container mx-auto flex justify-between items-center">
+//         <div className="flex items-center">
+//           {/* Quant Vedas Logo */}
+//           <img
+//             src="logo.jpg"
+//             alt="Quant Vedas Logo"
+//             className="h-10 w-10 mr-2 rounded-full"
+//             onError={(e) =>
+//               (e.currentTarget.src =
+//                 "https://placehold.co/40x40/FF0000/FFFFFF?text=Error")
+//             }
+//           />
+//           <span className="text-2xl font-bold mr-2">Quant Vedas</span>
+//           <span className="text-xl font-semibold text-blue-400">Journal</span>
+//         </div>
+//         <div className="flex space-x-4 items-center">
+//           {" "}
+//           {/* Added items-center for alignment */}
+//           <button
+//             onClick={() => onNavigate("dashboard")}
+//             className="hover:text-blue-300 transition duration-200"
+//           >
+//             Dashboard
+//           </button>
+//           <button
+//             onClick={() => onNavigate("profile")}
+//             className="hover:text-blue-300 transition duration-200"
+//           >
+//             Profile
+//           </button>
+//           {/* Profile Photo/Icon for navigation */}
+//           {currentUser && (
+//             <button onClick={() => onNavigate("profile")} className="ml-4">
+//               <img
+//                 src={
+//                   currentUser.photoURL ||
+//                   `https://api.dicebear.com/7.x/initials/svg?seed=${
+//                     currentUser.displayName || currentUser.email || "User"
+//                   }`
+//                 }
+//                 alt="Profile"
+//                 className="h-10 w-10 rounded-full border-2 border-blue-400 object-cover cursor-pointer hover:border-blue-300 transition duration-200"
+//                 title="Go to Profile"
+//               />
+//             </button>
+//           )}
+//           <button
+//             onClick={onSignOut}
+//             className="bg-red-600 px-3 py-1 rounded-md hover:bg-red-700 transition duration-200"
+//           >
+//             Sign Out
+//           </button>
+//         </div>
+//       </div>
+//     </nav>
+//   );
+// };
 
 // --- TradeOrder Interface ---
 interface TradeOrder {
@@ -2536,7 +2532,7 @@ const StrategyViewModal: React.FC<StrategyViewModalProps> = ({
 
 // --- Dashboard Component ---
 const Dashboard: React.FC = () => {
-  const { currentUser, userId, db, isAuthReady } = useAuth();
+  const { userId, db, isAuthReady } = useAuth();
   const [trades, setTrades] = useState<Trade[]>([]);
   const [strategies, setStrategies] = useState<Strategy[]>([]); // New state for strategies
   const [filteredTrades, setFilteredTrades] = useState<Trade[]>([]);
@@ -2933,8 +2929,8 @@ const Dashboard: React.FC = () => {
     .reduce((sum, t) => sum + t.pnl, 0);
 
   // Calculate average win and average loss percentage
-  const avgWinPercentage = wins > 0 ? (totalProfit / totalProfit) * 100 : 0; // Simplified for demo
-  const avgLossPercentage = losses > 0 ? (totalLoss / totalLoss) * 100 : 0; // Simplified for demo
+  // const avgWinPercentage = wins > 0 ? (totalProfit / totalProfit) * 100 : 0; // Simplified for demo
+  // const avgLossPercentage = losses > 0 ? (totalLoss / totalLoss) * 100 : 0; // Simplified for demo
 
   return (
     <div className="container mx-auto p-6 bg-gray-900 min-h-screen text-gray-100">
@@ -3216,6 +3212,7 @@ const Dashboard: React.FC = () => {
           isOpen={isNewSetupModalOpen}
           onClose={() => setIsNewSetupModalOpen(false)}
           onImportTrades={async (trades) => {
+            console.log("New SetUp ModalOpen: ", trades);
             setMessage(
               "Import functionality is handled at the AppContent level."
             );
@@ -3292,10 +3289,10 @@ const Stats: React.FC = () => {
   const winningTrades = closedTrades.filter((trade) => trade.pnl > 0);
   const losingTrades = closedTrades.filter((trade) => trade.pnl < 0);
 
-  const totalClosedPnl = closedTrades.reduce(
-    (sum, trade) => sum + trade.pnl,
-    0
-  );
+  // const totalClosedPnl = closedTrades.reduce(
+  //   (sum, trade) => sum + trade.pnl,
+  //   0
+  // );
   const totalWinningPnl = winningTrades.reduce(
     (sum, trade) => sum + trade.pnl,
     0
@@ -4045,7 +4042,7 @@ interface CalendarProps {
 
 const Calendar: React.FC<CalendarProps> = ({ trades }) => {
   const [currentDate, setCurrentDate] = useState(new Date()); // State for current month/year
-  const [message, setMessage] = useState("");
+  const [message] = useState("");
   const [showMessageBox, setShowMessageBox] = useState(false);
 
   // Group trades by date for easy lookup
