@@ -41,6 +41,7 @@ import {
 } from "recharts";
 
 import { TradeType } from "./types/trade";
+import logo from "./assets/logo.png";
 
 // --- Global Variables from Canvas Environment ---
 // These variables are provided by the Canvas environment and should not be modified.
@@ -4556,7 +4557,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <div className="w-64 bg-gray-800 text-white flex flex-col p-4 shadow-lg min-h-screen">
       <div className="flex items-center mb-6">
         <img
-          src="logo.jpg"
+          src={logo}
           alt="Quant Vedas Logo"
           className="h-10 w-10 mr-2 rounded-full"
           onError={(e) =>
@@ -4564,7 +4565,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               "https://placehold.co/40x40/FF0000/FFFFFF?text=Error")
           }
         />
-        <span className="text-2xl font-bold">Stonk Journal</span>
+        <span className="text-2xl font-bold"> Journal</span>
       </div>
 
       {/* Account Info - Similar to dashboard header */}
